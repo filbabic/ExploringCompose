@@ -62,6 +62,12 @@ interface LibrarianRepository {
 
   suspend fun removeReview(review: Review)
 
+  suspend fun getGenreById(genreId: String): Genre
+
+  suspend fun getReviewById(reviewId: String): BookReview
+
+  suspend fun updateReview(review: Review)
+
   fun getReadingListsFlow(): Flow<List<ReadingListsWithBooks>>
 
   suspend fun removeReadingList(readingList: ReadingList)

@@ -52,6 +52,9 @@ interface ReviewDao {
   @Query("SELECT * FROM reviews")
   fun getReviewsFlow(): Flow<List<BookReview>>
 
+  @Update(onConflict = OnConflictStrategy.REPLACE)
+  suspend fun updateReview(review: Review)
+
   @Delete
   suspend fun removeReview(review: Review)
 

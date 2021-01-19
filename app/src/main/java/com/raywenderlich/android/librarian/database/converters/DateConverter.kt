@@ -32,28 +32,18 @@
  * THE SOFTWARE.
  */
 
-package com.raywenderlich.android.librarian.model
+package com.raywenderlich.android.librarian.database.converters
 
-import android.os.Parcelable
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.raywenderlich.android.librarian.database.converters.DateConverter
-import com.raywenderlich.android.librarian.database.converters.ReadingEntryConverter
-import kotlinx.android.parcel.Parcelize
+import androidx.room.TypeConverter
 import java.util.*
 
-@Entity(tableName = "reviews")
-@Parcelize
-data class Review(
-  @PrimaryKey
-  val id: String = UUID.randomUUID().toString(),
-  val bookId: String,
-  val rating: Int,
-  val notes: String,
-  val imageUrl: String,
-  @TypeConverters(DateConverter::class)
-  val lastUpdatedDate: Date,
-  @TypeConverters(ReadingEntryConverter::class)
-  val entries: List<ReadingEntry>
-) : Parcelable
+class DateConverter {
+
+  @TypeConverter
+  fun fromTimestamp(value: Long?): Date {
+    return Date(value ?: 0)
+  }
+
+  @TypeConverter
+  fun dateToTimestamp(date: Date?): Long = date?.time ?: 0
+}

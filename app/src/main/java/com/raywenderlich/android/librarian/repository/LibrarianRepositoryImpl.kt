@@ -85,6 +85,13 @@ class LibrarianRepositoryImpl @Inject constructor(
 
   override suspend fun removeReview(review: Review) = reviewDao.removeReview(review)
 
+  override suspend fun getReviewById(reviewId: String): BookReview =
+    reviewDao.getReviewsById(reviewId)
+
+  override suspend fun updateReview(review: Review) = reviewDao.updateReview(review)
+
+  override suspend fun getGenreById(genreId: String): Genre = genreDao.getGenreById(genreId)
+
   override fun getReadingListsFlow(): Flow<List<ReadingListsWithBooks>> =
     readingListDao.getReadingListsFlow()
       .map { items ->

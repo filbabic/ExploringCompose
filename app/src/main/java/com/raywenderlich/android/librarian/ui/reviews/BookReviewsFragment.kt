@@ -56,6 +56,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.raywenderlich.android.librarian.R
+import com.raywenderlich.android.librarian.model.relations.BookReview
+import com.raywenderlich.android.librarian.ui.bookReviewDetails.BookReviewDetailsActivity
 import com.raywenderlich.android.librarian.ui.composeUi.DeleteDialog
 import com.raywenderlich.android.librarian.ui.composeUi.LibrarianTheme
 import com.raywenderlich.android.librarian.ui.composeUi.TopBar
@@ -121,7 +123,7 @@ class BookReviewsFragment : Fragment() {
       }
     ) {
       BookReviewsList(bookReviews,
-        onItemClick = {},
+        onItemClick = ::onItemSelected,
         onLongItemTap = { bookReview -> bookReviewsViewModel.onItemLongTapped(bookReview) })
 
       if (reviewToDelete != null) {
@@ -139,5 +141,9 @@ class BookReviewsFragment : Fragment() {
         )
       }
     }
+  }
+
+  private fun onItemSelected(item: BookReview) {
+    startActivity(BookReviewDetailsActivity.getIntent(requireContext(), item))
   }
 }

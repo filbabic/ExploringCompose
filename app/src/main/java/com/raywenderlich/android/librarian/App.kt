@@ -36,14 +36,12 @@ package com.raywenderlich.android.librarian
 
 import android.app.Application
 import com.google.gson.Gson
-import com.raywenderlich.android.librarian.model.Book
-import com.raywenderlich.android.librarian.model.Genre
-import com.raywenderlich.android.librarian.model.ReadingList
-import com.raywenderlich.android.librarian.model.Review
+import com.raywenderlich.android.librarian.model.*
 import com.raywenderlich.android.librarian.repository.LibrarianRepository
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -120,19 +118,34 @@ class App : Application() {
           bookId = books.first { it.name == "At The Mountains Of Madness" }.id,
           rating = 4,
           imageUrl = "https://m.media-amazon.com/images/I/61LFSHVx8gL.jpg",
-          notes = "A really interesting book that picks your brain about what kinds of hidden and hideous things could exist in this huge and unexplored world."
+          notes = "A really interesting book that picks your brain about what kinds of hidden and hideous things could exist in this huge and unexplored world.",
+          entries = emptyList(),
+          lastUpdatedDate = Date()
         ),
         Review(
           bookId = books.first { it.name == "Dream Quest Of Unknown Kadath" }.id,
           rating = 5,
           imageUrl = "https://d3525k1ryd2155.cloudfront.net/h/474/226/988226474.0.x.1.jpg",
-          notes = "Another beautiful yet horrifying story by Lovecraft, which takes you on multiple journeys"
+          notes = "Another beautiful yet horrifying story by Lovecraft, which takes you on multiple journeys",
+          lastUpdatedDate = Date(),
+          entries = listOf(
+            ReadingEntry(
+              dateOfEntry = Date(),
+              comment = "This book is spectacular!"
+            ),
+            ReadingEntry(
+              dateOfEntry = Date(),
+              comment = "I can't stop reading it!"
+            )
+          )
         ),
         Review(
           bookId = books.first { it.name == "The Last Wish" }.id,
           rating = 5,
           imageUrl = "https://www.hachettebookgroup.com/wp-content/uploads/2019/09/9780316497541-1.jpg?fit=424%2C675",
-          notes = "The Witcher universe is simply stunning and exhilarating. The spectrum of vicious and deadly monsters towards simple people with emotions, feelings and their own everyday struggles makes the fantasy part of the book fly much lower and makes it easier to recognize our own traits and flaws in such characters."
+          notes = "The Witcher universe is simply stunning and exhilarating. The spectrum of vicious and deadly monsters towards simple people with emotions, feelings and their own everyday struggles makes the fantasy part of the book fly much lower and makes it easier to recognize our own traits and flaws in such characters.",
+          entries = emptyList(),
+          lastUpdatedDate = Date()
         )
       )
 
