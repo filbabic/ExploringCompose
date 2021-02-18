@@ -104,7 +104,7 @@ class BookReviewsFragment : Fragment() {
   @Composable
   fun AddBookReview() {
     FloatingActionButton(onClick = { }) {
-      Icon(imageVector = Icons.Default.Add)
+      Icon(imageVector = Icons.Default.Add, contentDescription = "Add Book Review")
     }
   }
 

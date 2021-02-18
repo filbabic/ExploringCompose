@@ -2,7 +2,7 @@ package com.raywenderlich.android.librarian.ui.composeUi
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.ButtonConstants.defaultButtonColors
+import androidx.compose.material.ButtonDefaults.buttonColors
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
@@ -20,7 +20,7 @@ fun DialogButton(
   TextButton(
     onClick = onClickAction,
     modifier = modifier.padding(8.dp),
-    colors = defaultButtonColors(
+    colors = buttonColors(
       backgroundColor = MaterialTheme.colors.primary,
       contentColor = MaterialTheme.colors.onSecondary
     )

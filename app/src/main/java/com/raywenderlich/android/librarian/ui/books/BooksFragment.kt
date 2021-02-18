@@ -91,7 +91,11 @@ class BooksFragment : Fragment() {
   @Composable
   fun FilterButton() {
     IconButton(onClick = {}) {
-      Icon(Icons.Default.Edit, tint = MaterialTheme.colors.onSecondary)
+      Icon(
+        Icons.Default.Edit,
+        tint = MaterialTheme.colors.onSecondary,
+        contentDescription = "Filter"
+      )
     }
   }
 
@@ -106,7 +110,7 @@ class BooksFragment : Fragment() {
   @Composable
   fun AddNewBook() {
     FloatingActionButton(
-      content = { Icon(Icons.Filled.Add) },
+      content = { Icon(Icons.Filled.Add, contentDescription = "Add Book") },
       onClick = {},
     )
   }

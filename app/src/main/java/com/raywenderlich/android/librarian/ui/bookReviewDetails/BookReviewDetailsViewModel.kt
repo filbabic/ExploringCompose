@@ -1,6 +1,5 @@
 package com.raywenderlich.android.librarian.ui.bookReviewDetails
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,10 +9,16 @@ import com.raywenderlich.android.librarian.model.ReadingEntry
 import com.raywenderlich.android.librarian.model.Review
 import com.raywenderlich.android.librarian.model.relations.BookReview
 import com.raywenderlich.android.librarian.repository.LibrarianRepository
+import com.raywenderlich.android.librarian.ui.bookReviewDetails.animation.BookReviewDetailsScreenState
+import com.raywenderlich.android.librarian.ui.bookReviewDetails.animation.Initial
+import com.raywenderlich.android.librarian.ui.bookReviewDetails.animation.Loaded
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 
-class BookReviewDetailsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class BookReviewDetailsViewModel @Inject constructor(
   private val repository: LibrarianRepository
 ) : ViewModel() {
 
@@ -23,14 +28,14 @@ class BookReviewDetailsViewModel @ViewModelInject constructor(
   private val _genreState = MutableLiveData<Genre>()
   val genreState: LiveData<Genre> = _genreState
 
-  private val _deleteEntryState = MutableLiveData<ReadingEntry>()
-  val deleteEntryState: LiveData<ReadingEntry> = _deleteEntryState
+  private val _deleteEntryState = MutableLiveData<ReadingEntry?>()
+  val deleteEntryState: LiveData<ReadingEntry?> = _deleteEntryState
 
   private val _isShowingAddEntryState = MutableLiveData<Boolean>()
   val isShowingAddEntryState: LiveData<Boolean> = _isShowingAddEntryState
 
-  private val _isFirstLoadFinishedState = MutableLiveData<Boolean>()
-  val isFirstLoadFinishedState: LiveData<Boolean> = _isFirstLoadFinishedState
+  private val _screenAnimationState = MutableLiveData<BookReviewDetailsScreenState>()
+  val screenAnimationState: LiveData<BookReviewDetailsScreenState> = _screenAnimationState
 
   fun setReview(bookReview: BookReview) {
     _bookReviewDetailsState.value = bookReview
@@ -81,5 +86,13 @@ class BookReviewDetailsViewModel @ViewModelInject constructor(
       repository.updateReview(updatedReview)
       setReview(repository.getReviewById(updatedReview.id))
     }
+  }
+
+  fun onScreenLoaded() {
+    _screenAnimationState.value = Loaded
+  }
+
+  fun animateReverse() {
+    _screenAnimationState.value = Initial
   }
 }

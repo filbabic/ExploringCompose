@@ -1,9 +1,11 @@
 package com.raywenderlich.android.librarian.ui.readingList.ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -24,11 +26,14 @@ fun ReadingLists(
   onItemClick: (ReadingListsWithBooks) -> Unit,
   onLongItemTap: (ReadingListsWithBooks) -> Unit
 ) {
-  LazyColumnFor(items = readingLists, modifier = Modifier.fillMaxWidth()) { readingList ->
-    ReadingListItem(readingList, onItemClick, onLongItemTap)
+  LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    items(items = readingLists) { readingList ->
+      ReadingListItem(readingList, onItemClick, onLongItemTap)
+    }
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ReadingListItem(
   readingList: ReadingListsWithBooks,
@@ -40,9 +45,8 @@ fun ReadingListItem(
       .height(75.dp)
       .fillMaxWidth()
       .padding(8.dp)
-      .clickable(
+      .combinedClickable(
         onClick = { onItemClick(readingList) },
-        indication = null,
         onLongClick = { onLongItemTap(readingList) }
       ),
     elevation = 8.dp,

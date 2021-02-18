@@ -20,7 +20,8 @@ fun BackButton(
     content = {
       Icon(
         Icons.Default.ArrowBack,
-        tint = MaterialTheme.colors.onSecondary
+        tint = MaterialTheme.colors.onSecondary,
+        contentDescription = "Go Back"
       )
     },
     onClick = { onBackAction() }

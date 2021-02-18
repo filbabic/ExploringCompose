@@ -1,14 +1,16 @@
 package com.raywenderlich.android.librarian.ui.books
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.raywenderlich.android.librarian.model.relations.BookAndGenre
 import com.raywenderlich.android.librarian.repository.LibrarianRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class BooksViewModel @ViewModelInject constructor(
+@HiltViewModel
+class BooksViewModel @Inject constructor(
   repository: LibrarianRepository
 ) : ViewModel() {
 

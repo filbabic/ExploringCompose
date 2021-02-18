@@ -38,7 +38,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.animate
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -113,7 +113,7 @@ class ReadingListFragment : Fragment() {
 
       ReadingLists(
         readingLists = readingListsState,
-        onItemClick = { readingList -> },
+        onItemClick = { },
         onLongItemTap = { readingListViewModel.onDeleteReadingList(it) })
 
       if (isShowingAddList) {
@@ -144,12 +144,12 @@ class ReadingListFragment : Fragment() {
     val isShowingAddReadingList by readingListViewModel.isShowingAddReadingListState.observeAsState(
       false
     )
-    val size = animate(target = if (isShowingAddReadingList) 0.dp else 56.dp)
+    val size by animateDpAsState(targetValue = if (isShowingAddReadingList) 0.dp else 56.dp)
 
     FloatingActionButton(modifier = Modifier.size(size),
       onClick = { readingListViewModel.onAddReadingListTapped() }
     ) {
-      Icon(imageVector = Icons.Default.Add)
+      Icon(imageVector = Icons.Default.Add, contentDescription = "Add Reading List")
     }
   }
 

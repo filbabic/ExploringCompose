@@ -1,12 +1,14 @@
 package com.raywenderlich.android.librarian.ui.reviews
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.raywenderlich.android.librarian.model.relations.BookReview
 import com.raywenderlich.android.librarian.repository.LibrarianRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BookReviewsViewModel @ViewModelInject constructor(
+@HiltViewModel
+class BookReviewsViewModel @Inject constructor(
   private val repository: LibrarianRepository
 ) : ViewModel() {
 
@@ -14,8 +16,8 @@ class BookReviewsViewModel @ViewModelInject constructor(
     viewModelScope.coroutineContext
   )
 
-  private val _deleteReviewState = MutableLiveData<BookReview>()
-  val deleteReviewState: LiveData<BookReview> = _deleteReviewState
+  private val _deleteReviewState = MutableLiveData<BookReview?>()
+  val deleteReviewState: LiveData<BookReview?> = _deleteReviewState
 
   fun onItemLongTapped(bookReview: BookReview) {
     _deleteReviewState.value = bookReview

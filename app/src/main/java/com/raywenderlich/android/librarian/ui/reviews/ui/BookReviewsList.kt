@@ -1,9 +1,11 @@
 package com.raywenderlich.android.librarian.ui.reviews.ui
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -29,11 +31,14 @@ fun BookReviewsList(
   onLongItemTap: (BookReview) -> Unit
 ) {
 
-  LazyColumnFor(items = bookReviews) { bookReview ->
-    BookReviewItem(bookReview, onItemClick, onLongItemTap)
+  LazyColumn {
+    items(items = bookReviews) { bookReview ->
+      BookReviewItem(bookReview, onItemClick, onLongItemTap)
+    }
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BookReviewItem(
   bookReview: BookReview,
@@ -47,9 +52,8 @@ fun BookReviewItem(
     modifier = Modifier
       .wrapContentHeight()
       .padding(16.dp)
-      .clickable(
+      .combinedClickable(
         onClick = { onItemClick(bookReview) },
-        indication = null,
         onLongClick = { onLongItemTap(bookReview) }
       )
   ) {
@@ -106,16 +110,17 @@ fun BookReviewItem(
       Card(
         modifier = Modifier.weight(0.4f),
         shape = RoundedCornerShape(
-          topRight = 16.dp,
-          topLeft = 16.dp,
-          bottomLeft = 0.dp,
-          bottomRight = 16.dp
+          topStart = 16.dp,
+          topEnd = 16.dp,
+          bottomStart = 0.dp,
+          bottomEnd = 16.dp
         ),
         elevation = 16.dp
       ) {
         CoilImage(
           data = bookReview.review.imageUrl,
-          contentScale = ContentScale.FillWidth
+          contentScale = ContentScale.FillWidth,
+          contentDescription = "Book Image"
         )
       }
     }

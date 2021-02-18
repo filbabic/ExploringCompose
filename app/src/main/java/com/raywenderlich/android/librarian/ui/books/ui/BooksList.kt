@@ -1,15 +1,19 @@
 package com.raywenderlich.android.librarian.ui.books.ui
 
-import androidx.compose.animation.animate
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumnFor
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
@@ -26,32 +30,35 @@ fun BooksList(
   onLongItemTap: (BookAndGenre) -> Unit = {}
 ) {
 
-  LazyColumnFor(
-    items = books,
+  LazyColumn(
     modifier = Modifier.padding(top = 16.dp)
-  ) { bookAndGenre ->
-    BookListItem(bookAndGenre, bookAndGenre.book.id in selectedBooks, onLongItemTap)
-    Spacer(modifier = Modifier.size(2.dp))
+  ) {
+    items(items = books) { bookAndGenre ->
+      BookListItem(bookAndGenre, bookAndGenre.book.id in selectedBooks, onLongItemTap)
+      Spacer(modifier = Modifier.size(2.dp))
+    }
   }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BookListItem(
   bookAndGenre: BookAndGenre,
   isSelected: Boolean,
   onLongItemTap: (BookAndGenre) -> Unit
 ) {
-  val cornerRadius = animate(target = if (isSelected) 0.dp else 16.dp)
-  val borderColor = animate(target = if (isSelected) Color.Red else MaterialTheme.colors.primary)
-  val textColor = animate(target = if (isSelected) Color.Red else MaterialTheme.colors.primary)
+  val cornerRadius by animateDpAsState(targetValue = if (isSelected) 0.dp else 16.dp)
+  val borderColor by
+  animateColorAsState(targetValue = if (isSelected) Color.Red else MaterialTheme.colors.primary)
+  val textColor by
+  animateColorAsState(targetValue = if (isSelected) Color.Red else MaterialTheme.colors.primary)
 
   Card(
     modifier = Modifier
       .wrapContentHeight()
       .fillMaxWidth()
       .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-      .clickable(onClick = {},
-        indication = null,
+      .combinedClickable(onClick = {},
         onLongClick = { onLongItemTap(bookAndGenre) }),
     elevation = 8.dp,
     border = BorderStroke(1.dp, borderColor),

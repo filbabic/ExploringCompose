@@ -37,10 +37,9 @@ package com.raywenderlich.android.librarian.ui.bookReviewDetails
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.core.TransitionState
-import androidx.compose.animation.transition
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -48,6 +47,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -57,7 +57,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,7 +64,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.raywenderlich.android.librarian.R
 import com.raywenderlich.android.librarian.model.relations.BookReview
-import com.raywenderlich.android.librarian.ui.bookReviewDetails.animation.*
+import com.raywenderlich.android.librarian.ui.bookReviewDetails.animation.BookReviewDetailsTransitionState
+import com.raywenderlich.android.librarian.ui.bookReviewDetails.animation.Initial
+import com.raywenderlich.android.librarian.ui.bookReviewDetails.animation.animateBookReviewDetails
 import com.raywenderlich.android.librarian.ui.bookReviewDetails.readingEntries.AddReadingEntryDialog
 import com.raywenderlich.android.librarian.ui.bookReviewDetails.readingEntries.ReadingEntries
 import com.raywenderlich.android.librarian.ui.composeUi.DeleteDialog
@@ -113,12 +114,10 @@ class BookReviewDetailsActivity : AppCompatActivity() {
 
   @Composable
   fun BookReviewDetailsContent() {
-    val state = transition(
-      definition = transitionDefinition,
-      toState = true,
-      initState = bookReviewDetailsViewModel.isFirstLoadFinishedState.value
-        ?: false
-    )
+    val animationState by bookReviewDetailsViewModel.screenAnimationState.observeAsState(Initial)
+    val state = animateBookReviewDetails(screenState = animationState)
+
+    LaunchedEffect(true, block = { bookReviewDetailsViewModel.onScreenLoaded() })
 
     Scaffold(topBar = { BookReviewDetailsTopBar() },
       floatingActionButton = { AddReadingEntry(state) }) {
@@ -136,16 +135,19 @@ class BookReviewDetailsActivity : AppCompatActivity() {
   }
 
   @Composable
-  fun AddReadingEntry(state: TransitionState) {
+  fun AddReadingEntry(state: BookReviewDetailsTransitionState) {
     FloatingActionButton(
-      modifier = Modifier.size(state[floatingButtonSize]),
+      modifier = Modifier.size(state.floatingButtonSize),
       onClick = { bookReviewDetailsViewModel.onAddEntryTapped() }) {
-      Icon(imageVector = Icons.Default.Add)
+      Icon(
+        imageVector = Icons.Default.Add,
+        contentDescription = "Add Book Review"
+      )
     }
   }
 
   @Composable
-  fun BookReviewDetailsInformation(state: TransitionState) {
+  fun BookReviewDetailsInformation(state: BookReviewDetailsTransitionState) {
     val bookReview by bookReviewDetailsViewModel.bookReviewDetailsState.observeAsState(
       EMPTY_BOOK_REVIEW
     )
@@ -174,7 +176,7 @@ class BookReviewDetailsActivity : AppCompatActivity() {
               .align(Alignment.CenterHorizontally)
               .padding(bottom = 16.dp)
           }, horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(state[imageMarginTop]))
+            Spacer(modifier = Modifier.height(state.imageMarginTop))
 
             Card(
               modifier = Modifier
@@ -184,30 +186,31 @@ class BookReviewDetailsActivity : AppCompatActivity() {
             ) {
               CoilImage(
                 data = bookReview.review.imageUrl,
-                contentScale = ContentScale.FillWidth
+                contentScale = ContentScale.FillWidth,
+                contentDescription = "Book Image"
               )
             }
 
-            Spacer(modifier = Modifier.height(state[titleMarginTop]))
+            Spacer(modifier = Modifier.height(state.titleMarginTop))
 
             Text(
               text = bookReview.book.name,
               fontWeight = FontWeight.Bold,
               fontSize = 18.sp,
               color = MaterialTheme.colors.onPrimary,
-              modifier = Modifier.alpha(state[contentAlpha])
+              modifier = Modifier.alpha(state.contentAlpha)
             )
 
-            Spacer(modifier = Modifier.height(state[contentMarginTop]))
+            Spacer(modifier = Modifier.height(state.contentMarginTop))
 
             Text(
               text = genre.name,
               fontSize = 12.sp,
               color = MaterialTheme.colors.onPrimary,
-              modifier = Modifier.alpha(state[contentAlpha])
+              modifier = Modifier.alpha(state.contentAlpha)
             )
 
-            Spacer(modifier = Modifier.height(state[contentMarginTop]))
+            Spacer(modifier = Modifier.height(state.contentMarginTop))
 
             RatingBar(
               range = 1..5,
@@ -216,7 +219,7 @@ class BookReviewDetailsActivity : AppCompatActivity() {
               currentRating = bookReview.review.rating
             )
 
-            Spacer(modifier = Modifier.height(state[contentMarginTop]))
+            Spacer(modifier = Modifier.height(state.contentMarginTop))
 
             Text(
               text = stringResource(
@@ -225,7 +228,7 @@ class BookReviewDetailsActivity : AppCompatActivity() {
               ),
               fontSize = 12.sp,
               color = MaterialTheme.colors.onPrimary,
-              modifier = Modifier.alpha(state[contentAlpha])
+              modifier = Modifier.alpha(state.contentAlpha)
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -242,7 +245,7 @@ class BookReviewDetailsActivity : AppCompatActivity() {
 
             Text(
               modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 8.dp, bottom = 8.dp)
-                .alpha(state[contentAlpha]),
+                .alpha(state.contentAlpha),
               text = bookReview.review.notes,
               fontSize = 12.sp,
               fontStyle = FontStyle.Italic,
